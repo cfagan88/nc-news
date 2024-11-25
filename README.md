@@ -19,6 +19,19 @@ then
 
 - responds with a list of all available endpoints
 
+### /api/topics
+
+- responds with a list of all topics
+- example response:
+  {"topics": [{
+  description: "The man, the Mitch, the legend",
+  slug: "mitch",
+  },
+  {
+  description: "Not dogs",
+  slug: "cats",
+  }]}
+
 ---
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)

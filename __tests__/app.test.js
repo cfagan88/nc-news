@@ -18,3 +18,27 @@ describe("GET /api", () => {
       });
   });
 });
+
+describe("GET /api/topics", () => {
+  test("200: Responds with an array of objects, one for each topic in the database", () => {
+    return request(app)
+      .get("/api/topics/")
+      .expect(200)
+      .then(({ body: { topics } }) => {
+        expect(topics).toEqual([
+          {
+            description: "The man, the Mitch, the legend",
+            slug: "mitch",
+          },
+          {
+            description: "Not dogs",
+            slug: "cats",
+          },
+          {
+            description: "what books are made of",
+            slug: "paper",
+          },
+        ]);
+      });
+  });
+});
