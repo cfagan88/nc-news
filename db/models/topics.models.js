@@ -1,6 +1,6 @@
 const db = require("../connection");
 
-exports.requestAllTopics = () => {
+exports.fetchAllTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows }) => {
     return rows;
   });
