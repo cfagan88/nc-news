@@ -29,9 +29,47 @@ describe("GET /api/topics", () => {
         topics.forEach((topic) => {
           expect(topic).toMatchObject({
             description: expect.any(String),
-            slug: expect.any(String)
-          })
-        })
+            slug: expect.any(String),
+          });
+        });
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id", () => {
+  test("200: Takes a specific article_id and returns only the relevant article", () => {
+    return request(app)
+      .get("/api/articles/4")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toMatchObject({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: expect.any(Number),
+          body: expect.any(String),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+
+  test("404: Sends an appropriate status and error message when given a valid but non-existent article_id ", () => {
+    return request(app)
+      .get("/api/articles/104")
+      .expect(404)
+      .then(({body: {msg}}) => {
+        expect(msg).toBe("article does not exist");
+      });
+  });
+
+  test('400: Sends an appropriate status and error message when given an invalid article_id', () => {
+    return request(app)
+      .get("/api/articles/invalidId")
+      .expect(400)
+      .then(({body: {msg}}) => {
+        expect(msg).toBe("Bad request");
       });
   });
 });
