@@ -26,20 +26,12 @@ exports.fetchArticleByID = (article_id) => {
     });
 };
 
-exports.fetchCommentsByArticleID = (article_id) => {
+exports.checkArticleExists = (article_id) => {
   return db
-    .query(
-      `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`,
-      [article_id]
-    )
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({
-          status: 404,
-          msg: "article does not exist or no comments exist for this article",
-        });
+        return Promise.reject({ status: 404, msg: "article does not exist" });
       }
-      console.log(rows);
-      return rows;
     });
 };

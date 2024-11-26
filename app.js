@@ -4,14 +4,16 @@ const { getApi } = require("./db/controllers/api.controller");
 const { getAllTopics } = require("./db/controllers/topics.controllers");
 const {
   getArticleByID,
-  getAllArticles,
-  getCommentsByArticleID,
+  getAllArticles
 } = require("./db/controllers/articles.controller");
 const {
   customErrorHandler,
   postgresErrorHandler,
-  serverErrorHandler,
+  serverErrorHandler
 } = require("./db/errors/error-handling");
+const {
+  getCommentsByArticleID
+} = require("./db/controllers/comments.controller");
 
 app.get("/api", getApi);
 

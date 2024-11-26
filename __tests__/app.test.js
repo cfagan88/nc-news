@@ -156,15 +156,21 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 
+  test("200: Send an appropriate response when article exists, but no there are no associated comments", () => {
+    return request(app)
+      .get("/api/articles/7/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toEqual([]);
+      });
+  });
+
   test("404: Sends an appropriate status and error message when given a valid but non-existent article_id ", () => {
     return request(app)
       .get("/api/articles/104/comments")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe(
-          "article does not exist or no comments exist for this article"
-          //is there a better way to split this into two tests, one for if the article does not exist, and another for if there are no comments? Right now we receive back an empty array in either situation, but ideally I'd like to be more specific if helpful!
-        );
+        expect(msg).toBe("article does not exist");
       });
   });
 
