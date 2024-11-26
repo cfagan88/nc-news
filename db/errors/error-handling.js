@@ -9,6 +9,12 @@ exports.postgresErrorHandler = (err, req, res, next) => {
     case "22P02":
       res.status(400).send({ msg: "Bad request" });
       break;
+    case "23502":
+      res.status(400).send({ msg: "Bad request" });
+      break;
+    case "23503":
+      res.status(404).send({ msg: "User does not exist" });
+      break;
     default:
       next(err);
       break;

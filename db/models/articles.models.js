@@ -35,3 +35,14 @@ exports.checkArticleExists = (article_id) => {
       }
     });
 };
+
+exports.patchArticleByID = (updatedVotes, article_id) => {
+  return db
+    .query(`UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING *`, [
+      updatedVotes,
+      article_id,
+    ])
+    .then(({ rows }) => {
+      return rows[0];
+    })
+};
