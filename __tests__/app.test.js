@@ -92,7 +92,7 @@ describe('"GET /api/articles', () => {
             created_at: expect.any(String),
             votes: expect.any(Number),
             article_img_url: expect.any(String),
-            comment_count: expect.any(String),
+            comment_count: expect.any(Number),
           });
         });
       });
@@ -107,7 +107,7 @@ describe('"GET /api/articles', () => {
       });
   });
 
-  test("Returned article objects do not contain a property for body", () => {
+  test("200: Returned article objects do not contain a property for body", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -116,6 +116,70 @@ describe('"GET /api/articles', () => {
         articles.forEach((article) => {
           expect(article).not.toHaveProperty("body");
         });
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: Returns an array containing all comments for specified article", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toEqual([
+          {
+            comment_id: 11,
+            body: "Ambidextrous marsupial",
+            article_id: 3,
+            author: "icellusedkars",
+            votes: 0,
+            created_at: "2020-09-19T23:10:00.000Z",
+          },
+          {
+            comment_id: 10,
+            body: "git push origin master",
+            article_id: 3,
+            author: "icellusedkars",
+            votes: 0,
+            created_at: "2020-06-20T07:24:00.000Z",
+          },
+        ]);
+      });
+  });
+
+  test("200: Returned array is sorted by descending date by default", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+
+  test("200: Send an appropriate response when article exists, but no there are no associated comments", () => {
+    return request(app)
+      .get("/api/articles/7/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toEqual([]);
+      });
+  });
+
+  test("404: Sends an appropriate status and error message when given a valid but non-existent article_id ", () => {
+    return request(app)
+      .get("/api/articles/104/comments")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("article does not exist");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when given an invalid article_id", () => {
+    return request(app)
+      .get("/api/articles/invalidId/comments")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
       });
   });
 });
