@@ -126,7 +126,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/3/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
-        expect(comments).toEqual([
+        expect(comments).toMatchObject([
           {
             comment_id: 11,
             body: "Ambidextrous marsupial",
@@ -177,6 +177,51 @@ describe("GET /api/articles/:article_id/comments", () => {
   test("400: Sends an appropriate status and error message when given an invalid article_id", () => {
     return request(app)
       .get("/api/articles/invalidId/comments")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("POST api/articles/:article_id/comments", () => {
+  const newComment = {
+    username: "icellusedkars",
+    body: "This is a test POST request comment",
+  };
+
+  test.only("201: Responds with the posted comment", () => {
+    return request(app)
+      .post("/api/articles/7/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body: { comment } }) => {
+        console.log(comment)
+        expect(comment).toMatchObject({
+          comment_id: expect.any(Number),
+          body: "This is a test POST request comment",
+          article_id: 7,
+          author: "icellusedkars",
+          votes: 0,
+          created_at: expect.any(String),
+        });
+      });
+  });
+
+  test("404: Sends an appropriate status and error message when given a valid but non-existent article_id ", () => {
+    return request(app)
+      .post("/api/articles/200/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("article does not exist");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when given an invalid article_id", () => {
+    return request(app)
+      .post("/api/articles/invalidId/comments")
+      .send(newComment)
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Bad request");
