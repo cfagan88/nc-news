@@ -18,18 +18,16 @@ exports.getCommentsByArticleID = (req, res, next) => {
     .catch(next);
 };
 
-
 exports.postComment = (req, res, next) => {
   const newComment = req.body;
   const { article_id } = req.params;
+  const promises = [
+    checkArticleExists(article_id),
+    addComment(newComment, article_id),
+  ];
 
-  //Note to tutors - I had to split the below and chain the promises rather than use promise.all, but I can't quite work out why the promise.all route would not also throw an error? Perhaps you could kindly help me figure this out, if not I will check in my next 1:1!
-
-  return checkArticleExists(article_id)
-    .then(() => {
-      return addComment(newComment, article_id);
-    })
-    .then((comment) => {
+  Promise.all(promises)
+    .then(([_, comment]) => {
       res.status(201).send({ comment });
     })
     .catch(next);
