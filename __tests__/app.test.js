@@ -190,13 +190,12 @@ describe("POST api/articles/:article_id/comments", () => {
     body: "This is a test POST request comment",
   };
 
-  test.only("201: Responds with the posted comment", () => {
+  test("201: Responds with the posted comment", () => {
     return request(app)
       .post("/api/articles/7/comments")
       .send(newComment)
       .expect(201)
       .then(({ body: { comment } }) => {
-        console.log(comment)
         expect(comment).toMatchObject({
           comment_id: expect.any(Number),
           body: "This is a test POST request comment",
@@ -225,6 +224,56 @@ describe("POST api/articles/:article_id/comments", () => {
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Bad request");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when no username is provided", () => {
+    return request(app)
+      .post("/api/articles/7/comments")
+      .send({
+        body: "This is a test POST request comment",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Username is required");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when username provided is an empty string", () => {
+    return request(app)
+      .post("/api/articles/7/comments")
+      .send({
+        user: "",
+        body: "This is a test POST request comment",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Username is required");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when no body/comment provided in post request", () => {
+    return request(app)
+      .post("/api/articles/7/comments")
+      .send({
+        username: "icellusedkars",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Comment is required");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when body/comment provided in post request is an empty string", () => {
+    return request(app)
+      .post("/api/articles/7/comments")
+      .send({
+        username: "icellusedkars",
+        body: "",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Comment is required");
       });
   });
 });

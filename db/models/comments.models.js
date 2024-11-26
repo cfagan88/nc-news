@@ -14,6 +14,14 @@ exports.fetchCommentsByArticleID = (article_id) => {
 exports.addComment = (newComment, article_id) => {
   const { username, body } = newComment;
 
+  if (!username) {
+    return Promise.reject({ status: 400, msg: "Username is required" });
+  }
+  
+  if (!body) {
+    return Promise.reject({ status: 400, msg: "Comment is required" });
+  }
+
   return db
     .query(
       `INSERT INTO comments(author, body, article_id) VALUES ($1, $2, $3) RETURNING *`,
