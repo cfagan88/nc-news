@@ -61,6 +61,26 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 
+  test("200: Includes comment_count within the returned article object", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toMatchObject({
+          author: "butter_bridge",
+          title: "Living in the shadow of a great man",
+          body: "I find this existence challenging",
+          article_id: 1,
+          topic: "mitch",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 100,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          comment_count: 11,
+        });
+      });
+  });
+
   test("404: Sends an appropriate status and error message when given a valid but non-existent article_id ", () => {
     return request(app)
       .get("/api/articles/104")
@@ -155,9 +175,9 @@ describe('"GET /api/articles', () => {
       .expect(200)
       .then(({ body: { articles } }) => {
         expect(articles.length).toBe(12);
-        articles.forEach(({topic}) => {
-          expect(topic).toBe("mitch")
-        })
+        articles.forEach(({ topic }) => {
+          expect(topic).toBe("mitch");
+        });
       });
   });
 
@@ -167,8 +187,8 @@ describe('"GET /api/articles', () => {
       .expect(404)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("topic does not exist");
-        })
       });
+  });
 
   test("200: Returned article objects do not contain a property for body", () => {
     return request(app)
