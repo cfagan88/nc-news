@@ -81,7 +81,7 @@
       }
     }
   },
-  "PATCH //api/articles/:article_id": {
+  "PATCH /api/articles/:article_id": {
     "description": "takes an object containing a number by which to increment or decrement the vote property on an existing article. Returns the article with the updated vote count",
     "queries": [],
     "exampleRequestBody": { "inc_votes": 20 },
@@ -97,5 +97,10 @@
         "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
       }
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes the comment specified by the comment_id endpoint. Returns a 204 status and no content",
+    "queries": [],
+    "exampleResponse": {}
   }
 }
