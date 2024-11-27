@@ -6,12 +6,15 @@ const {
   getArticleByID,
   getAllArticles,
   updateArticleByID,
-} = require("./db/controllers/articles.controller");
+} = require("./db/controllers/articles.controllers");
 const {
   getCommentsByArticleID,
   postComment,
   deleteCommentByID,
-} = require("./db/controllers/comments.controller");
+} = require("./db/controllers/comments.controllers");
+const {
+  getAllUsers
+} = require("./db/controllers/users.controllers");
 const {
   customErrorHandler,
   postgresErrorHandler,
@@ -25,6 +28,8 @@ app.get("/api", getApi);
 app.get("/api/topics", getAllTopics);
 
 app.get("/api/articles", getAllArticles);
+
+app.get("/api/users", getAllUsers);
 
 app.get("/api/articles/:article_id", getArticleByID);
 

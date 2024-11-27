@@ -2,7 +2,7 @@ const { checkArticleExists } = require("../models/articles.models");
 const {
   fetchCommentsByArticleID,
   addComment,
-  deleteComment
+  deleteComment,
 } = require("../models/comments.models");
 
 exports.getCommentsByArticleID = (req, res, next) => {
@@ -35,11 +35,11 @@ exports.postComment = (req, res, next) => {
 };
 
 exports.deleteCommentByID = (req, res, next) => {
-  const {comment_id} = req.params
+  const { comment_id } = req.params;
 
   deleteComment(comment_id)
-  .then(() => {
-    res.status(204).send()
-  })
-  .catch(next);
-}
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch(next);
+};
