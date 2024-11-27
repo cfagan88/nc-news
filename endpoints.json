@@ -10,8 +10,19 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all articles",
+    "description": "serves an array of all articles. Default sort_by is descending date but can be specified by any other table column and ordered ascending or descending",
     "queries": ["author", "topic", "sort_by", "order"],
+    "sortOptions": [
+      "author",
+      "title",
+      "article_id",
+      "topic",
+      "created_at",
+      "votes",
+      "article_img_url",
+      "comment_count"
+    ],
+    "orderOptions": ["ASC", "DESC"],
     "exampleResponse": {
       "articles": [
         {

@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const { getApi } = require("./db/controllers/api.controller");
+const { getApi } = require("./db/controllers/api.controllers");
 const { getAllTopics } = require("./db/controllers/topics.controllers");
 const {
   getArticleByID,
