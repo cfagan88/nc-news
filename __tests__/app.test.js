@@ -80,6 +80,8 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
+// -------------------------------------------------------------------------
+
 describe('"GET /api/articles', () => {
   test("200: Returns an array of all articles", () => {
     return request(app)
@@ -422,7 +424,7 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 
-  test.only("400: Sends an appropriate status and error message when given an invalid comment_id", () => {
+  test("400: Sends an appropriate status and error message when given an invalid comment_id", () => {
     return request(app)
       .delete("/api/comments/invalidId")
       .expect(400)
@@ -433,3 +435,21 @@ describe("DELETE /api/comments/:comment_id", () => {
 });
 
 // -------------------------------------------------------------------------
+
+describe("GET /api/users", () => {
+  test("200: Responds with an array of objects, one for each user in the database", () => {
+    return request(app)
+      .get("/api/users/")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users).toHaveLength(4);
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+});
