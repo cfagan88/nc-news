@@ -149,6 +149,27 @@ describe('"GET /api/articles', () => {
       });
   });
 
+  test("200: Accepts a topic query which filters articles by the topic specified in the query", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(12);
+        articles.forEach(({topic}) => {
+          expect(topic).toBe("mitch")
+        })
+      });
+  });
+
+  test("404: Sends an appropriate status and error message when given a non-existent topic", () => {
+    return request(app)
+      .get("/api/articles?topic=notATopic")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("topic does not exist");
+        })
+      });
+
   test("200: Returned article objects do not contain a property for body", () => {
     return request(app)
       .get("/api/articles")
@@ -164,7 +185,7 @@ describe('"GET /api/articles', () => {
   test("404: Returns an error if a non-valid sort-by query is entered", () => {
     return request(app)
       .get("/api/articles?sort_by=badSQLCodeGoesHere")
-      .expect(404)
+      .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Invalid Input");
       });
@@ -173,7 +194,7 @@ describe('"GET /api/articles', () => {
   test("404: Returns an error if a non-valid order query is entered", () => {
     return request(app)
       .get("/api/articles?order=badSQLCodeGoesHere")
-      .expect(404)
+      .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Invalid Input");
       });
@@ -227,7 +248,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 
-  test("404: Sends an appropriate status and error message when given a valid but non-existent article_id ", () => {
+  test("404: Sends an appropriate status and error message when given a valid but non-existent article_id", () => {
     return request(app)
       .get("/api/articles/104/comments")
       .expect(404)
