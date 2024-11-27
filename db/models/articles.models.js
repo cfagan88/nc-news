@@ -1,15 +1,23 @@
 const db = require("../connection");
 
-exports.fetchAllArticles = () => {
+exports.fetchAllArticles = (sort_by = "created_at", order = "DESC") => {
+
+  const validSortBy = ["author", "title", "article_id", "topic", "created_at", "votes", "article_img_url", "comment_count"];
+  const validOrder = ["ASC", "DESC"];
+
+  if (!validSortBy.includes(sort_by) || !validOrder.includes(order)) {
+    return Promise.reject({ status: 404, msg: "Invalid Input" });
+  }
+  
+  let sqlQuery = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url,
+  CAST (COUNT (comment_id) AS INT) AS comment_count
+  FROM articles
+  LEFT JOIN comments ON articles.article_id = comments.article_id
+  GROUP BY articles.article_id
+  ORDER BY ${sort_by} ${order};`
+  
   return db
-    .query(
-      `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url,
-      CAST (COUNT (comment_id) AS INT) AS comment_count
-      FROM articles
-      LEFT JOIN comments ON articles.article_id = comments.article_id
-      GROUP BY articles.article_id
-      ORDER BY created_at DESC;`
-    )
+    .query(sqlQuery)
     .then(({ rows }) => {
       return rows;
     });

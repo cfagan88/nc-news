@@ -104,12 +104,48 @@ describe('"GET /api/articles', () => {
       });
   });
 
-  test("200: Returned array is sorted by descending date by default", () => {
+  test("200: Returned array is ordered by descending date by default", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
       .then(({ body: { articles } }) => {
         expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+
+  test("200: Accepts an order query which orders articles by ascending date", () => {
+    return request(app)
+      .get("/api/articles?order=ASC")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", { descending: false });
+      });
+  });
+
+  test("200: Accepts a sort_by query which sorts articles by descending (default) author name (where type = string)", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("author", { descending: true });
+      });
+  });
+
+  test("200: Accepts a sort_by query which sorts articles by descending (default) votes (where type = number)", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("votes", { descending: true });
+      });
+  });
+
+  test("200: Accepts both sort_by and order queries which sort articles by ascending title", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order=ASC")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("title", { descending: false });
       });
   });
 
@@ -122,6 +158,24 @@ describe('"GET /api/articles', () => {
         articles.forEach((article) => {
           expect(article).not.toHaveProperty("body");
         });
+      });
+  });
+
+  test("404: Returns an error if a non-valid sort-by query is entered", () => {
+    return request(app)
+      .get("/api/articles?sort_by=badSQLCodeGoesHere")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid Input");
+      });
+  });
+
+  test("404: Returns an error if a non-valid order query is entered", () => {
+    return request(app)
+      .get("/api/articles?order=badSQLCodeGoesHere")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid Input");
       });
   });
 });
@@ -453,3 +507,5 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+// -------------------------------------------------------------------------
