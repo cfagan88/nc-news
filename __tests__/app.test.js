@@ -299,9 +299,7 @@ describe("POST api/articles/:article_id/comments", () => {
   });
 });
 
-
 // -----------------------------------------------------------------------
-
 
 describe("PATCH /api/articles/:article_id", () => {
   test("200: Increments vote property for given article when given a positive number", () => {
@@ -315,7 +313,6 @@ describe("PATCH /api/articles/:article_id", () => {
             updatedArticle: { votes },
           },
         }) => {
-
           expect(votes).toBe(20);
         }
       );
@@ -368,8 +365,8 @@ describe("PATCH /api/articles/:article_id", () => {
 
   test("400: Sends an appropriate status and error message when new vote count is wrong data type", () => {
     return request(app)
-    .patch("/api/articles/4")
-    .send({ inc_votes: "invalidType" })
+      .patch("/api/articles/4")
+      .send({ inc_votes: "invalidType" })
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Bad request");
@@ -378,8 +375,8 @@ describe("PATCH /api/articles/:article_id", () => {
 
   test("400: Sends an appropriate status and error message when no vote number is provided", () => {
     return request(app)
-    .patch("/api/articles/4")
-    .send({})
+      .patch("/api/articles/4")
+      .send({})
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Bad request");
@@ -396,3 +393,43 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 });
+
+// -------------------------------------------------------------------------
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: Deletes a comment with the provided comment_id", () => {
+    return request(app)
+      .delete("/api/comments/3")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+
+        return request(app)
+          .delete("/api/comments/3")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("Comment not found");
+          });
+      });
+  });
+
+  test("404: Sends an appropriate status and error message when given a valid but non-existent comment_id", () => {
+    return request(app)
+      .delete("/api/comments/1103")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Comment not found");
+      });
+  });
+
+  test.only("400: Sends an appropriate status and error message when given an invalid comment_id", () => {
+    return request(app)
+      .delete("/api/comments/invalidId")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
+
+// -------------------------------------------------------------------------

@@ -8,14 +8,15 @@ const {
   updateArticleByID,
 } = require("./db/controllers/articles.controller");
 const {
+  getCommentsByArticleID,
+  postComment,
+  deleteCommentByID,
+} = require("./db/controllers/comments.controller");
+const {
   customErrorHandler,
   postgresErrorHandler,
   serverErrorHandler,
 } = require("./db/errors/error-handling");
-const {
-  getCommentsByArticleID,
-  postComment,
-} = require("./db/controllers/comments.controller");
 
 app.use(express.json());
 
@@ -32,6 +33,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleID);
 app.post("/api/articles/:article_id/comments", postComment);
 
 app.patch("/api/articles/:article_id", updateArticleByID);
+
+app.delete("/api/comments/:comment_id", deleteCommentByID);
 
 app.use(customErrorHandler);
 app.use(postgresErrorHandler);
