@@ -111,6 +111,21 @@
       }
     }
   },
+  "PATCH /api/comments/:comment_id": {
+    "description": "takes an object containing a number by which to increment or decrement the vote property on an existing comment. Returns the comment with the updated vote count",
+    "queries": [],
+    "exampleRequestBody": { "inc_votes": 20 },
+    "exampleResponse": {
+      "updatedComment": {
+        "comment_id": 2,
+        "body": "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+        "article_id": 1,
+        "author": "butter_bridge",
+        "votes": 34,
+        "created_at": "2020-10-31T03:03:00.000Z"
+      }
+    }
+  },
   "DELETE /api/comments/:comment_id": {
     "description": "deletes the comment specified by the comment_id endpoint. Returns a 204 status and no content",
     "queries": [],
