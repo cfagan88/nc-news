@@ -2,6 +2,7 @@ const { checkArticleExists } = require("../models/articles-models");
 const {
   fetchCommentsByArticleID,
   addComment,
+  patchComment,
   deleteComment,
 } = require("../models/comments-models");
 
@@ -30,6 +31,17 @@ exports.postComment = (req, res, next) => {
   Promise.all(promises)
     .then(([_, comment]) => {
       res.status(201).send({ comment });
+    })
+    .catch(next);
+};
+
+exports.updateCommentByID = (req, res, next) => {
+  const updatedVotes = req.body.inc_votes;
+  const { comment_id } = req.params;
+
+  patchComment(updatedVotes, comment_id)
+    .then((updatedComment) => {
+      res.status(200).send({ updatedComment });
     })
     .catch(next);
 };

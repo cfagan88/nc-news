@@ -570,3 +570,96 @@ describe("GET /api/users/:username", () => {
       });
   });
 });
+
+// -------------------------------------------------------------------------
+
+describe("PATCH /api/comments/:comment_id", () => {
+  test("200: Increments vote property for given comment when given a positive number", () => {
+    return request(app)
+      .patch("/api/comments/2")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then(
+        ({
+          body: {
+            updatedComment: { votes },
+          },
+        }) => {
+          expect(votes).toBe(15);
+        }
+      );
+  });
+
+  test("200: Decrements vote property for given comment when given a positive number", () => {
+    return request(app)
+      .patch("/api/comments/2")
+      .send({ inc_votes: -10 })
+      .expect(200)
+      .then(
+        ({
+          body: {
+            updatedComment: { votes },
+          },
+        }) => {
+          expect(votes).toBe(4);
+        }
+      );
+  });
+
+  test("200: Does not mutate or edit any other properties of the specified comment", () => {
+    return request(app)
+      .patch("/api/comments/2")
+      .send({ inc_votes: 20 })
+      .expect(200)
+      .then(({ body: { updatedComment } }) => {
+        expect(updatedComment).toMatchObject({
+          comment_id: 2,
+          body: "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+          article_id: 1,
+          author: "butter_bridge",
+          votes: 34,
+          created_at: "2020-10-31T03:03:00.000Z",
+        });
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when given an invalid comment_id", () => {
+    return request(app)
+      .patch("/api/comments/invalidID")
+      .send({ inc_votes: 20 })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when new vote count is wrong data type", () => {
+    return request(app)
+      .patch("/api/comments/2")
+      .send({ inc_votes: "testString" })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when no vote number is provided", () => {
+    return request(app)
+      .patch("/api/comments/2")
+      .send({})
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+
+  test("404: Sends an appropriate status and error message when given a valid but non-existent comment_id", () => {
+    return request(app)
+      .patch("/api/comments/104")
+      .send({ inc_votes: 20 })
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("comment does not exist");
+      });
+  });
+});
