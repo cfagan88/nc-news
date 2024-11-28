@@ -181,6 +181,15 @@ describe('"GET /api/articles', () => {
       });
   });
 
+  test("200: Sends an appropriate status and error message when a topic exists bu there are no articles for that topic", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toEqual([]);
+      });
+  });
+
   test("404: Sends an appropriate status and error message when given a non-existent topic", () => {
     return request(app)
       .get("/api/articles?topic=notATopic")
