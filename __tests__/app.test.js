@@ -550,3 +550,23 @@ describe("GET /api/users", () => {
 });
 
 // -------------------------------------------------------------------------
+
+describe("GET /api/users/:username", () => {
+  test("200: Takes a specific username and returns only the relevant user data", () => {
+    return request(app)
+      .get("/api/users/icellusedkars")
+      .expect(200)
+      .then(({ body: { user } }) => {
+        expect(user).toMatchObject({});
+      });
+  });
+
+  test("404: Sends an appropriate status and error message when given a valid but non-existent username", () => {
+    return request(app)
+      .get("/api/users/notAUserYet")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("user does not exist");
+      });
+  });
+});
