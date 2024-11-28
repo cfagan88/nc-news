@@ -4,7 +4,7 @@ const {
   patchArticleByID,
   checkArticleExists,
   checkTopicExists,
-} = require("../models/articles.models");
+} = require("../models/articles-models");
 
 exports.getAllArticles = (req, res, next) => {
   const { sort_by, order, topic } = req.query;

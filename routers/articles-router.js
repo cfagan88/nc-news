@@ -3,11 +3,11 @@ const {
   getArticleByID,
   getAllArticles,
   updateArticleByID,
-} = require("../db/controllers/articles.controllers");
+} = require("../db/controllers/articles-controllers");
 const {
   getCommentsByArticleID,
   postComment,
-} = require("../db/controllers/comments.controllers");
+} = require("../db/controllers/comments-controllers");
 
 
 articlesRouter.route("/")

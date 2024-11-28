@@ -1,4 +1,4 @@
-const {fetchAllUsers} = require("../models/users.models");
+const {fetchAllUsers} = require("../models/users-models");
 
 exports.getAllUsers = (req, res, next) => {
   fetchAllUsers()
