@@ -14,7 +14,7 @@ exports.fetchAllArticles = (sort_by = "created_at", order = "DESC", topic) => {
   const validOrder = ["ASC", "DESC"];
 
   if (!validSortBy.includes(sort_by) || !validOrder.includes(order)) {
-    return Promise.reject({ status: 400, msg: "Invalid Input" });
+    return Promise.reject({ status: 400, msg: "bad request" });
   }
 
   let sqlQuery = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url,
@@ -37,7 +37,7 @@ exports.fetchAllArticles = (sort_by = "created_at", order = "DESC", topic) => {
 exports.fetchArticleByID = (article_id) => {
   return db
     .query(
-      `SELECT articles.author, articles.title, articles.body, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, CAST (COUNT (comment_id) AS INT) AS comment_count
+      `SELECT articles.*, CAST (COUNT (comment_id) AS INT) AS comment_count
       FROM articles
       LEFT JOIN comments ON articles.article_id = comments.article_id
       WHERE articles.article_id = $1
@@ -79,6 +79,9 @@ exports.patchArticleByID = (updatedVotes, article_id) => {
       article_id,
     ])
     .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "article does not exist" });
+      }
       return rows[0];
     });
 };

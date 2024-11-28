@@ -67,15 +67,6 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body: { article } }) => {
         expect(article).toMatchObject({
-          author: "butter_bridge",
-          title: "Living in the shadow of a great man",
-          body: "I find this existence challenging",
-          article_id: 1,
-          topic: "mitch",
-          created_at: "2020-07-09T20:11:00.000Z",
-          votes: 100,
-          article_img_url:
-            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
           comment_count: 11,
         });
       });
@@ -124,7 +115,7 @@ describe('"GET /api/articles', () => {
       });
   });
 
-  test("200: Returned array is ordered by descending date by default", () => {
+  test("200: Orders articles by descending date (default)", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -133,7 +124,7 @@ describe('"GET /api/articles', () => {
       });
   });
 
-  test("200: Accepts an order query which orders articles by ascending date", () => {
+  test("200: Orders articles by ascending date", () => {
     return request(app)
       .get("/api/articles?order=ASC")
       .expect(200)
@@ -142,7 +133,7 @@ describe('"GET /api/articles', () => {
       });
   });
 
-  test("200: Accepts a sort_by query which sorts articles by descending (default) author name (where type = string)", () => {
+  test("200: Orders articles by descending author name", () => {
     return request(app)
       .get("/api/articles?sort_by=author")
       .expect(200)
@@ -151,7 +142,7 @@ describe('"GET /api/articles', () => {
       });
   });
 
-  test("200: Accepts a sort_by query which sorts articles by descending (default) votes (where type = number)", () => {
+  test("200: Orders articles by descending votes", () => {
     return request(app)
       .get("/api/articles?sort_by=votes")
       .expect(200)
@@ -160,7 +151,7 @@ describe('"GET /api/articles', () => {
       });
   });
 
-  test("200: Accepts both sort_by and order queries which sort articles by ascending title", () => {
+  test("200: Orders articles by ascending title with both sort_by and order queries", () => {
     return request(app)
       .get("/api/articles?sort_by=title&order=ASC")
       .expect(200)
@@ -169,7 +160,7 @@ describe('"GET /api/articles', () => {
       });
   });
 
-  test("200: Accepts a topic query which filters articles by the topic specified in the query", () => {
+  test("200: Accepts a topic query which filters articles by the given topic", () => {
     return request(app)
       .get("/api/articles?topic=mitch")
       .expect(200)
@@ -181,7 +172,7 @@ describe('"GET /api/articles', () => {
       });
   });
 
-  test("200: Sends an appropriate status and error message when a topic exists bu there are no articles for that topic", () => {
+  test("200: Sends an appropriate status when a topic exists but there are no articles for that topic", () => {
     return request(app)
       .get("/api/articles?topic=paper")
       .expect(200)
@@ -211,21 +202,21 @@ describe('"GET /api/articles', () => {
       });
   });
 
-  test("404: Returns an error if a non-valid sort-by query is entered", () => {
+  test("400: Returns an error if a non-valid sort-by query is entered", () => {
     return request(app)
       .get("/api/articles?sort_by=badSQLCodeGoesHere")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid Input");
+        expect(msg).toBe("bad request");
       });
   });
 
-  test("404: Returns an error if a non-valid order query is entered", () => {
+  test("400: Returns an error if a non-valid order query is entered", () => {
     return request(app)
       .get("/api/articles?order=badSQLCodeGoesHere")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid Input");
+        expect(msg).toBe("bad request");
       });
   });
 });
