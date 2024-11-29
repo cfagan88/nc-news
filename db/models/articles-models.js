@@ -14,7 +14,7 @@ exports.fetchAllArticles = (sort_by = "created_at", order = "DESC", topic) => {
   const validOrder = ["ASC", "DESC"];
 
   if (!validSortBy.includes(sort_by) || !validOrder.includes(order)) {
-    return Promise.reject({ status: 400, msg: "bad request" });
+    return Promise.reject({ status: 400, msg: "Bad request" });
   }
 
   let sqlQuery = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url,
@@ -46,7 +46,7 @@ exports.fetchArticleByID = (article_id) => {
     )
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "article does not exist" });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
       return rows[0];
     });
@@ -57,7 +57,7 @@ exports.checkArticleExists = (article_id) => {
     .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "article does not exist" });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
     });
 };
@@ -67,7 +67,7 @@ exports.checkTopicExists = (topic) => {
     .query(`SELECT * FROM topics WHERE slug = $1`, [topic])
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "topic does not exist" });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
     });
 };
@@ -80,7 +80,7 @@ exports.patchArticleByID = (updatedVotes, article_id) => {
     )
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "article does not exist" });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
       return rows[0];
     });
@@ -93,17 +93,15 @@ exports.addArticle = (
   topic,
   article_img_url = "no img_url"
 ) => {
-
   if (!author || !title || !body || !topic) {
-    return Promise.reject({ status: 400, msg: "required information missing" });
+    return Promise.reject({ status: 400, msg: "Bad request" });
   }
-
 
   return db
     .query(`SELECT * FROM users WHERE username = $1;`, [author])
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "not found" });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
     })
     .then(() => {
@@ -111,10 +109,11 @@ exports.addArticle = (
         .query(`SELECT * FROM topics WHERE slug = $1;`, [topic])
         .then(({ rows }) => {
           if (rows.length === 0) {
-            return Promise.reject({ status: 404, msg: "not found" });
+            return Promise.reject({ status: 404, msg: "Not found" });
           }
         });
-    }). then(() => {
+    })
+    .then(() => {
       return db
         .query(
           `INSERT INTO articles(author, title, body, topic, article_img_url) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
@@ -123,5 +122,5 @@ exports.addArticle = (
         .then(({ rows: [{ article_id }] }) => {
           return article_id;
         });
-    })
+    });
 };

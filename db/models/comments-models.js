@@ -15,11 +15,11 @@ exports.addComment = (newComment, article_id) => {
   const { username, body } = newComment;
 
   if (!username) {
-    return Promise.reject({ status: 400, msg: "Username is required" });
+    return Promise.reject({ status: 400, msg: "Bad request" });
   }
 
   if (!body) {
-    return Promise.reject({ status: 400, msg: "Comment is required" });
+    return Promise.reject({ status: 400, msg: "Bad request" });
   }
 
   return db
@@ -40,7 +40,7 @@ exports.patchComment = (updatedVotes, comment_id) => {
     )
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "comment does not exist" });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
       return rows[0];
     });
@@ -53,7 +53,7 @@ exports.deleteComment = (comment_id) => {
     ])
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Comment not found" });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
     });
 };

@@ -77,7 +77,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/104")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("article does not exist");
+        expect(msg).toBe("Not found");
       });
   });
 
@@ -186,7 +186,7 @@ describe('"GET /api/articles', () => {
       .get("/api/articles?topic=notATopic")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("topic does not exist");
+        expect(msg).toBe("Not found");
       });
   });
 
@@ -207,7 +207,7 @@ describe('"GET /api/articles', () => {
       .get("/api/articles?sort_by=badSQLCodeGoesHere")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("bad request");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -216,7 +216,7 @@ describe('"GET /api/articles', () => {
       .get("/api/articles?order=badSQLCodeGoesHere")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("bad request");
+        expect(msg).toBe("Bad request");
       });
   });
 });
@@ -264,7 +264,7 @@ describe("POST /api/articles", () => {
       .send(newArticle)
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("not found");
+        expect(msg).toBe("Not found");
       });
   });
 
@@ -281,7 +281,7 @@ describe("POST /api/articles", () => {
       .send(newArticle)
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("not found");
+        expect(msg).toBe("Not found");
       });
   });
 
@@ -295,7 +295,7 @@ describe("POST /api/articles", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("required information missing");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -310,7 +310,7 @@ describe("POST /api/articles", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("required information missing");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -324,7 +324,7 @@ describe("POST /api/articles", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("required information missing");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -339,7 +339,7 @@ describe("POST /api/articles", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("required information missing");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -353,7 +353,7 @@ describe("POST /api/articles", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("required information missing");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -368,7 +368,7 @@ describe("POST /api/articles", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("required information missing");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -382,7 +382,7 @@ describe("POST /api/articles", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("required information missing");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -397,7 +397,7 @@ describe("POST /api/articles", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("required information missing");
+        expect(msg).toBe("Bad request");
       });
   });
 });
@@ -454,7 +454,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/104/comments")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("article does not exist");
+        expect(msg).toBe("Not found");
       });
   });
 
@@ -511,7 +511,7 @@ describe("POST api/articles/:article_id/comments", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Username is required");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -524,7 +524,7 @@ describe("POST api/articles/:article_id/comments", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Username is required");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -536,7 +536,7 @@ describe("POST api/articles/:article_id/comments", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Comment is required");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -549,7 +549,7 @@ describe("POST api/articles/:article_id/comments", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Comment is required");
+        expect(msg).toBe("Bad request");
       });
   });
 
@@ -559,7 +559,7 @@ describe("POST api/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("article does not exist");
+        expect(msg).toBe("Not found");
       });
   });
 
@@ -572,7 +572,7 @@ describe("POST api/articles/:article_id/comments", () => {
       })
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("User does not exist");
+        expect(msg).toBe("Not found");
       });
   });
 });
@@ -667,7 +667,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send({ inc_votes: 20 })
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("article does not exist");
+        expect(msg).toBe("Not found");
       });
   });
 });
@@ -686,7 +686,7 @@ describe("DELETE /api/comments/:comment_id", () => {
           .delete("/api/comments/3")
           .expect(404)
           .then(({ body: { msg } }) => {
-            expect(msg).toBe("Comment not found");
+            expect(msg).toBe("Not found");
           });
       });
   });
@@ -696,7 +696,7 @@ describe("DELETE /api/comments/:comment_id", () => {
       .delete("/api/comments/1103")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Comment not found");
+        expect(msg).toBe("Not found");
       });
   });
 
@@ -747,7 +747,7 @@ describe("GET /api/users/:username", () => {
       .get("/api/users/notAUserYet")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("user does not exist");
+        expect(msg).toBe("Not found");
       });
   });
 });
@@ -840,7 +840,7 @@ describe("PATCH /api/comments/:comment_id", () => {
       .send({ inc_votes: 20 })
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("comment does not exist");
+        expect(msg).toBe("Not found");
       });
   });
 });

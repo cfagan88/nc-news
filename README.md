@@ -11,7 +11,7 @@ This app enables you to search through a PostgreSQL database of news articles, t
 
 ## Hosted Version
 
-https://nc-news-6eit.onrender.com
+v
 
 ## Setup Instructions
 
