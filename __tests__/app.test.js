@@ -223,7 +223,7 @@ describe('"GET /api/articles', () => {
 
 // -------------------------------------------------------------------------
 
-describe.only("POST /api/articles", () => {
+describe("POST /api/articles", () => {
   test("201: Responds with the posted comment and a default img_url", () => {
     const newArticle = {
       author: "butter_bridge",
