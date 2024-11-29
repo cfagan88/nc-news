@@ -2,9 +2,9 @@ const {
   fetchArticleByID,
   fetchAllArticles,
   patchArticleByID,
-  checkArticleExists,
   checkTopicExists,
   addArticle,
+  deleteArticle,
 } = require("../models/articles-models");
 
 exports.getAllArticles = (req, res, next) => {
@@ -43,14 +43,24 @@ exports.updateArticleByID = (req, res, next) => {
 };
 
 exports.postArticle = (req, res, next) => {
-  const {author, title, body, topic, article_img_url} = req.body;
+  const { author, title, body, topic, article_img_url } = req.body;
 
   addArticle(author, title, body, topic, article_img_url)
     .then((article_id) => {
-      return fetchArticleByID(article_id)
-    })  
-  .then((article) => {
-      res.status(201).send({article});
+      return fetchArticleByID(article_id);
+    })
+    .then((article) => {
+      res.status(201).send({ article });
+    })
+    .catch(next);
+};
+
+exports.deleteArticleByID = (req, res, next) => {
+  const { article_id } = req.params;
+
+  deleteArticle(article_id)
+    .then(() => {
+      res.status(204).send();
     })
     .catch(next);
 };

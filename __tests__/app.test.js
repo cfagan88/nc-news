@@ -66,7 +66,6 @@ describe("POST /api/topics", () => {
       })
       .expect(400)
       .then(({ body: { msg } }) => {
-        console.log(msg);
         expect(msg).toBe("Bad request");
       });
   });
@@ -77,59 +76,6 @@ describe("POST /api/topics", () => {
       .send({
         slug: "food",
       })
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        console.log(msg);
-        expect(msg).toBe("Bad request");
-      });
-  });
-});
-
-// -------------------------------------------------------------------------
-
-describe("GET /api/articles/:article_id", () => {
-  test("200: Takes a specific article_id and returns only the relevant article", () => {
-    return request(app)
-      .get("/api/articles/4")
-      .expect(200)
-      .then(({ body: { article } }) => {
-        expect(article).toMatchObject({
-          article_id: 4,
-          title: "Student SUES Mitch!",
-          topic: "mitch",
-          author: "rogersop",
-          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
-          created_at: "2020-05-06T01:14:00.000Z",
-          votes: 0,
-          article_img_url:
-            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        });
-      });
-  });
-
-  test("200: Includes comment_count within the returned article object", () => {
-    return request(app)
-      .get("/api/articles/1")
-      .expect(200)
-      .then(({ body: { article } }) => {
-        expect(article).toMatchObject({
-          comment_count: 11,
-        });
-      });
-  });
-
-  test("404: Sends an appropriate status and error message when given a valid but non-existent article_id ", () => {
-    return request(app)
-      .get("/api/articles/104")
-      .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Not found");
-      });
-  });
-
-  test("400: Sends an appropriate status and error message when given an invalid article_id", () => {
-    return request(app)
-      .get("/api/articles/invalidId")
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Bad request");
@@ -450,6 +396,96 @@ describe("POST /api/articles", () => {
 
 // -------------------------------------------------------------------------
 
+describe("GET /api/articles/:article_id", () => {
+  test("200: Takes a specific article_id and returns only the relevant article", () => {
+    return request(app)
+      .get("/api/articles/4")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toMatchObject({
+          article_id: 4,
+          title: "Student SUES Mitch!",
+          topic: "mitch",
+          author: "rogersop",
+          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+          created_at: "2020-05-06T01:14:00.000Z",
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+
+  test("200: Includes comment_count within the returned article object", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toMatchObject({
+          comment_count: 11,
+        });
+      });
+  });
+
+  test("404: Sends an appropriate status and error message when given a valid but non-existent article_id ", () => {
+    return request(app)
+      .get("/api/articles/104")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when given an invalid article_id", () => {
+    return request(app)
+      .get("/api/articles/invalidId")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
+
+// -------------------------------------------------------------------------
+
+describe("DELETE /api/articles/:article_id", () => {
+  test("204: Deletes an article with the provided article_id", () => {
+    return request(app)
+      .delete("/api/articles/3")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+
+        return request(app)
+          .delete("/api/articles/3")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("Not found");
+          });
+      });
+  });
+
+  test("404: Sends an appropriate status and error message when given a valid but non-existent article_id", () => {
+    return request(app)
+      .delete("/api/articles/1107")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when given an invalid article_id", () => {
+    return request(app)
+      .delete("/api/articles/invalidId")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
+
+// -------------------------------------------------------------------------
+
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: Returns an array containing all comments for specified article", () => {
     return request(app)
@@ -758,48 +794,6 @@ describe("DELETE /api/comments/:comment_id", () => {
 
 // -------------------------------------------------------------------------
 
-describe("GET /api/users", () => {
-  test("200: Responds with an array of objects, one for each user in the database", () => {
-    return request(app)
-      .get("/api/users/")
-      .expect(200)
-      .then(({ body: { users } }) => {
-        expect(users).toHaveLength(4);
-        users.forEach((user) => {
-          expect(user).toMatchObject({
-            username: expect.any(String),
-            name: expect.any(String),
-            avatar_url: expect.any(String),
-          });
-        });
-      });
-  });
-});
-
-// -------------------------------------------------------------------------
-
-describe("GET /api/users/:username", () => {
-  test("200: Takes a specific username and returns only the relevant user data", () => {
-    return request(app)
-      .get("/api/users/icellusedkars")
-      .expect(200)
-      .then(({ body: { user } }) => {
-        expect(user).toMatchObject({});
-      });
-  });
-
-  test("404: Sends an appropriate status and error message when given a valid but non-existent username", () => {
-    return request(app)
-      .get("/api/users/notAUserYet")
-      .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Not found");
-      });
-  });
-});
-
-// -------------------------------------------------------------------------
-
 describe("PATCH /api/comments/:comment_id", () => {
   test("200: Increments vote property for given comment when given a positive number", () => {
     return request(app)
@@ -884,6 +878,48 @@ describe("PATCH /api/comments/:comment_id", () => {
     return request(app)
       .patch("/api/comments/104")
       .send({ inc_votes: 20 })
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+});
+
+// -------------------------------------------------------------------------
+
+describe("GET /api/users", () => {
+  test("200: Responds with an array of objects, one for each user in the database", () => {
+    return request(app)
+      .get("/api/users/")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users).toHaveLength(4);
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+});
+
+// -------------------------------------------------------------------------
+
+describe("GET /api/users/:username", () => {
+  test("200: Takes a specific username and returns only the relevant user data", () => {
+    return request(app)
+      .get("/api/users/icellusedkars")
+      .expect(200)
+      .then(({ body: { user } }) => {
+        expect(user).toMatchObject({});
+      });
+  });
+
+  test("404: Sends an appropriate status and error message when given a valid but non-existent username", () => {
+    return request(app)
+      .get("/api/users/notAUserYet")
       .expect(404)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Not found");

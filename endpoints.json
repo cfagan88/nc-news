@@ -80,6 +80,11 @@
       }
     }
   },
+  "DELETE /api/articles/:article_id": {
+    "description": "deletes the article specified by the article_id endpoint. Returns a 204 status and no content",
+    "queries": [],
+    "exampleResponse": {}
+  },
   "GET /api/articles/:article_id/comments": {
     "description": "serves an array of all comments for the specified article",
     "queries": [],
