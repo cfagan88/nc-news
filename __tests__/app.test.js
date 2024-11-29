@@ -41,6 +41,52 @@ describe("GET /api/topics", () => {
 
 // -------------------------------------------------------------------------
 
+describe("POST /api/topics", () => {
+  test("201: Responds with the posted comment", () => {
+    return request(app)
+      .post("/api/topics")
+      .send({
+        slug: "food",
+        description: "Something for us all to get excited about",
+      })
+      .expect(201)
+      .then(({ body: { topic } }) => {
+        expect(topic).toMatchObject({
+          slug: "food",
+          description: "Something for us all to get excited about",
+        });
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when no slug is provided", () => {
+    return request(app)
+      .post("/api/topics")
+      .send({
+        description: "Something for us all to get excited about",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        console.log(msg);
+        expect(msg).toBe("Bad request");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when no description is provided", () => {
+    return request(app)
+      .post("/api/topics")
+      .send({
+        slug: "food",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        console.log(msg);
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
+
+// -------------------------------------------------------------------------
+
 describe("GET /api/articles/:article_id", () => {
   test("200: Takes a specific article_id and returns only the relevant article", () => {
     return request(app)
@@ -93,7 +139,7 @@ describe("GET /api/articles/:article_id", () => {
 
 // -------------------------------------------------------------------------
 
-describe('"GET /api/articles', () => {
+describe("GET /api/articles", () => {
   test("200: Returns an array of all articles", () => {
     return request(app)
       .get("/api/articles")

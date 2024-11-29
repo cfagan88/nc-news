@@ -9,6 +9,13 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "POST /api/topics": {
+    "description": "takes a new topic object and adds to the respective table; returns an object containing the posted topic",
+    "queries": [],
+    "exampleResponse": {
+      "newTopic": [{ "slug": "good", "description": "I'm hungry!" }]
+    }
+  },
   "GET /api/articles": {
     "description": "serves an array of all articles. Default sort_by is descending date but can be specified by any other table column and ordered ascending or descending. Including a topic query will filter the data by that specified topic",
     "queries": ["topic", "sort_by", "order"],
@@ -43,7 +50,7 @@
     "description": "takes a new article and returns an object containing the posted article and related information such as the article_id and created_at timestamp",
     "queries": [],
     "exampleResponse": {
-      "article": {
+      "newArticle": {
         "author": "butter_bridge",
         "title": "Is it time for a new article yet?",
         "body": "Testing our new article functionality - fingers crossed...",
