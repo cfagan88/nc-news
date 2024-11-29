@@ -4,6 +4,7 @@ const {
   patchArticleByID,
   checkArticleExists,
   checkTopicExists,
+  addArticle,
 } = require("../models/articles-models");
 
 exports.getAllArticles = (req, res, next) => {
@@ -37,6 +38,19 @@ exports.updateArticleByID = (req, res, next) => {
   patchArticleByID(updatedVotes, article_id)
     .then((updatedArticle) => {
       res.status(200).send({ updatedArticle });
+    })
+    .catch(next);
+};
+
+exports.postArticle = (req, res, next) => {
+  const {author, title, body, topic, article_img_url} = req.body;
+
+  addArticle(author, title, body, topic, article_img_url)
+    .then((article_id) => {
+      return fetchArticleByID(article_id)
+    })  
+  .then((article) => {
+      res.status(201).send({article});
     })
     .catch(next);
 };

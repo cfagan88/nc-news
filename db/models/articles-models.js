@@ -85,3 +85,43 @@ exports.patchArticleByID = (updatedVotes, article_id) => {
       return rows[0];
     });
 };
+
+exports.addArticle = (
+  author,
+  title,
+  body,
+  topic,
+  article_img_url = "no img_url"
+) => {
+
+  if (!author || !title || !body || !topic) {
+    return Promise.reject({ status: 400, msg: "required information missing" });
+  }
+
+
+  return db
+    .query(`SELECT * FROM users WHERE username = $1;`, [author])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "not found" });
+      }
+    })
+    .then(() => {
+      return db
+        .query(`SELECT * FROM topics WHERE slug = $1;`, [topic])
+        .then(({ rows }) => {
+          if (rows.length === 0) {
+            return Promise.reject({ status: 404, msg: "not found" });
+          }
+        });
+    }). then(() => {
+      return db
+        .query(
+          `INSERT INTO articles(author, title, body, topic, article_img_url) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+          [author, title, body, topic, article_img_url]
+        )
+        .then(({ rows: [{ article_id }] }) => {
+          return article_id;
+        });
+    })
+};

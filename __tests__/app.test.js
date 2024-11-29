@@ -223,6 +223,187 @@ describe('"GET /api/articles', () => {
 
 // -------------------------------------------------------------------------
 
+describe.only("POST /api/articles", () => {
+  test("201: Responds with the posted comment and a default img_url", () => {
+    const newArticle = {
+      author: "butter_bridge",
+      title: "Is it time for a new article yet?",
+      body: "Testing our new article functionality - fingers crossed...",
+      topic: "mitch",
+    };
+
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(201)
+      .then(({ body: { article } }) => {
+        expect(article).toMatchObject({
+          author: "butter_bridge",
+          title: "Is it time for a new article yet?",
+          body: "Testing our new article functionality - fingers crossed...",
+          topic: "mitch",
+          article_img_url: "no img_url",
+          article_id: 14,
+          votes: 0,
+          created_at: expect.any(String),
+          comment_count: 0,
+        });
+      });
+  });
+
+  test("404: Responds with an error if the given author does not exist", () => {
+    const newArticle = {
+      author: "new_author",
+      title: "Is it time for a new article yet?",
+      body: "Testing our new article functionality - fingers crossed...",
+      topic: "mitch",
+    };
+
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
+      });
+  });
+
+  test("404: Responds with an error if the given topic does not exist", () => {
+    const newArticle = {
+      author: "butter_bridge",
+      title: "Is it time for a new article yet?",
+      body: "Testing our new article functionality - fingers crossed...",
+      topic: "new_topic",
+    };
+
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when no author is provided", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        title: "Is it time for a new article yet?",
+        body: "Testing our new article functionality - fingers crossed...",
+        topic: "new_topic",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("required information missing");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when author is empty string", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "",
+        title: "Is it time for a new article yet?",
+        body: "Testing our new article functionality - fingers crossed...",
+        topic: "new_topic",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("required information missing");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when no title is provided", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        body: "Testing our new article functionality - fingers crossed...",
+        topic: "new_topic",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("required information missing");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when title is empty string", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "",
+        body: "Testing our new article functionality - fingers crossed...",
+        topic: "new_topic",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("required information missing");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when no body is provided", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "Is it time for a new article yet?",
+        topic: "new_topic",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("required information missing");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when body is empty string", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "Is it time for a new article yet?",
+        body: "",
+        topic: "new_topic",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("required information missing");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when no topic is provided", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "Is it time for a new article yet?",
+        body: "Testing our new article functionality - fingers crossed...",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("required information missing");
+      });
+  });
+
+  test("400: Sends an appropriate status and error message when topic is empty string", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "Is it time for a new article yet?",
+        body: "Testing our new article functionality - fingers crossed...",
+        topic: "",
+      })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("required information missing");
+      });
+  });
+});
+
+// -------------------------------------------------------------------------
+
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: Returns an array containing all comments for specified article", () => {
     return request(app)

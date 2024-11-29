@@ -39,6 +39,23 @@
       ]
     }
   },
+  "POST /api/articles": {
+    "description": "takes a new article and returns an object containing the posted article and related information such as the article_id and created_at timestamp",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "author": "butter_bridge",
+        "title": "Is it time for a new article yet?",
+        "body": "Testing our new article functionality - fingers crossed...",
+        "topic": "mitch",
+        "article_img_url": "no img_url",
+        "article_id": 14,
+        "votes": 0,
+        "created_at": "2018-05-30T15:59:13.341Z",
+        "comment_count": 0
+      }
+    }
+  },
   "GET /api/articles/:article_id": {
     "description": "serves an object containing a single article based on the specified article_id provided in the endpoint",
     "queries": [],
@@ -81,7 +98,7 @@
     }
   },
   "POST /api/articles/:article_id/comments": {
-    "description": "takes a comment and returns an object containing the posted comment and related information such as the author and created_at timestamp",
+    "description": "takes a new comment and returns an object containing the posted comment and related information such as the author and created_at timestamp",
     "queries": [],
     "exampleResponse": {
       "comment": {
