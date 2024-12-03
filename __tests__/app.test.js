@@ -913,7 +913,12 @@ describe("GET /api/users/:username", () => {
       .get("/api/users/icellusedkars")
       .expect(200)
       .then(({ body: { user } }) => {
-        expect(user).toMatchObject({});
+        expect(user).toMatchObject({
+          username: "icellusedkars",
+          name: "sam",
+          avatar_url:
+            "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4",
+        });
       });
   });
 
