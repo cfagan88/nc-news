@@ -2,7 +2,9 @@
 
 ## Project Summary
 
-This app enables you to search through a PostgreSQL database of news articles, topics, authors and associated comments. Functionality includes (please seen "endpoints.json" for a detailed list):
+NC News is my first solo project at Northcoders, bringing together my knowledge of back-end programming so far!
+
+This API enables you to search through a PostgreSQL database of news articles, topics, authors and associated comments. Functionality includes (please seen "endpoints.json" for a detailed list):
 
 - Requesting all articles, topics or users
 - Requesting individual articles by id
@@ -11,7 +13,7 @@ This app enables you to search through a PostgreSQL database of news articles, t
 
 ## Hosted Version
 
-v
+Please find the hosted version [here](https://nc-news-6eit.onrender.com)
 
 ## Setup Instructions
 
