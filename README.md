@@ -17,7 +17,7 @@ Please find the hosted version [here](https://nc-news-6eit.onrender.com)
 
 ## Setup Instructions
 
-### Requirements
+### Minimum Requirements
 
 - Node v20.18.0
 - PSQL v12.20
